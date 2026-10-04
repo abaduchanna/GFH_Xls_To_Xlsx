@@ -282,7 +282,7 @@ class App:
         s=ttk.Style(); s.theme_use("clam")
         s.configure("Run.TButton",background=RED,foreground=WHITE,
                     font=("Calibri",11,"bold"),padding=(16,9),borderwidth=0)
-        s.map("Run.TButton",background=[("active","#c01820"),("disabled","#aaa")])
+        s.map("Run.TButton",background=[("active","#c82020"),("disabled","#aaa")])
         s.configure("Browse.TButton",background=NAVY,foreground=WHITE,
                     font=("Calibri",10),padding=(10,6),borderwidth=0)
         s.map("Browse.TButton",background=[("active","#1a2550")])
@@ -323,6 +323,7 @@ class App:
         """Header using FixedHeaderManager."""
         self.header_mgr = FixedHeaderManager(self.root, title="GFH Legacy Excel Converter")
         self.header_mgr.add_theme_toggle(self.theme_manager, callback=self._apply_theme)
+        self.header_mgr.add_copyright(self.theme_manager)
         # FixedHeaderManager now tags ALL its own widgets with _tag="header"
         # in __init__/add_theme_toggle/add_copyright, so no manual tagging needed.
         try:
