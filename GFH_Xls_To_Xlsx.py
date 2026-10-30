@@ -29,16 +29,12 @@ def _ensure(pip_name, imp_name):
         if _iu.find_spec(imp_name.split(".")[0]) is None:
             raise ImportError(imp_name)
     except ImportError:
-        try:
-            print(f"Installing {pip_name}…")
-            subprocess.check_call([sys.executable,"-m","pip","install","--upgrade",pip_name,"-q"])
-        except Exception as e:
-            print(f"  [WARN] could not install {pip_name}: {e}")
+        print(f"[WARN] {pip_name} is missing; install it before using this feature.")
 for _p,_i in [("pywin32","win32com")]:
     _ensure(_p,_i)
 
 import os, time, threading, queue, traceback
-from datetime import datetime, date
+from datetime import datetime
 import tkinter as tk
 from theme_manager import ThemeManager, apply_theme_to_window, get_copyright_year
 from header_manager import FixedHeaderManager
@@ -161,7 +157,6 @@ LOG_FG   = "#a8d8ff"
 
 ICON_ICO_NAME = "GFH_icon.ico"
 LOGO_PNG_NAME = "GFH_Telecom_Logo.png"
-COPYRIGHT_TEXT = f"Developed by www.3SVerse.com | Copyright © {date.today().year} | All rights reserved."
 ICON_ICO_B64 = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "icon_ico_b64.txt"), "r").read().strip() if not getattr(sys, "frozen", False) else open(os.path.join(getattr(sys, "_MEIPASS", "."), "assets", "icon_ico_b64.txt"), "r").read().strip()
 
 
@@ -239,6 +234,17 @@ def _set_window_icon(root):
         pass
 
 
+def _maximize_window(window):
+    try:
+        if window.winfo_exists():
+            window.state("zoomed")
+    except Exception:
+        try:
+            window.attributes("-zoomed", True)
+        except Exception:
+            pass
+
+
 class App:
     def __init__(self, root):
         self.root=root; self._q=queue.Queue(); self._busy=False
@@ -253,7 +259,8 @@ class App:
 
         self._logo_img=None
         self.theme_manager = ThemeManager("GFH Legacy Excel Converter", app_name="GFH-Xls-To-Xlsx")
-        self._styles(); self._header(); self._body(); self._copyright_bar(); self._poll()
+        # FixedHeaderManager owns the pinned footer; do not create a second one.
+        self._styles(); self._header(); self._body(); self._poll()
         apply_theme_to_window(self.root, self.theme_manager)
 
     def _apply_dynamic_geometry(self) -> None:
@@ -423,12 +430,6 @@ class App:
         for tag,clr in [("info","#90CDF4"),("success","#68D391"),
                         ("error","#FC8181"),("warning","#F6E05E")]:
             self.log_w.tag_config(tag,foreground=clr)
-
-    def _copyright_bar(self):
-        bar=tk.Frame(self.root,bg=NAVY,height=26)
-        bar.pack(fill="x",side="bottom"); bar.pack_propagate(False)
-        tk.Label(bar,text=COPYRIGHT_TEXT,bg=NAVY,fg="#9d9db8",
-                 font=("Calibri",8)).pack(pady=4)
 
     def _browse(self):
         d=filedialog.askdirectory(title="Select folder with legacy Excel files")

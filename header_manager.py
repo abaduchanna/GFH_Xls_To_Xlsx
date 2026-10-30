@@ -145,6 +145,14 @@ class FixedHeaderManager:
         import tkinter as tk
         copyright_text = theme_manager.get_copyright_text()
 
+        if getattr(self, "footer_frame", None) is not None:
+            try:
+                if self.footer_frame.winfo_exists():
+                    self.copyright_label.configure(text=copyright_text)
+                    return
+            except Exception:
+                pass
+
         # Footer bar pinned to bottom of the PARENT window — not inside the header frame
         self.footer_frame = tk.Frame(
             self.parent,
