@@ -14,8 +14,7 @@ Requires Microsoft Excel installed (uses Excel COM for faithful conversion).
 """
 
 # ── Auto-installer (version-aware) ─────────────────────────────────────────────
-import subprocess
-import sys, subprocess
+import sys
 def _pkg_version(dist):
     try:
         import importlib.metadata as _md
