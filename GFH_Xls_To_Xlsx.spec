@@ -113,5 +113,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    version='GFH_version.txt',
     icon='GFH_icon.ico',
 )
