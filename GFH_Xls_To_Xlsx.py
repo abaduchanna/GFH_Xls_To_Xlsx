@@ -13,6 +13,10 @@ to modern .xlsx, using real Excel so formatting, formulas and data are preserved
 Requires Microsoft Excel installed (uses Excel COM for faithful conversion).
 """
 
+# --- 3SVerse runtime tamper guard (t197): frozen EXE main debugger = silent exit ---
+import runtime_guard as _rguard3sv
+_rguard3sv.enforce()
+
 # ── Auto-installer (version-aware) ─────────────────────────────────────────────
 import sys
 def _pkg_version(dist):
@@ -410,10 +414,10 @@ class App:
 
         # action buttons
         act=tk.Frame(body,bg=LIGHT); act.pack(fill="x",pady=(0,12))
-        self.run_btn=ttk.Button(act,text="▶  Convert",style="Run.TButton",
+        self.run_btn=ttk.Button(act,text="Convert files",style="Run.TButton",
                                 command=self._start)
         self.run_btn.pack(side="left")
-        self.cancel_btn=ttk.Button(act,text="⏹  Cancel",style="Cancel.TButton",
+        self.cancel_btn=ttk.Button(act,text="Cancel",style="Cancel.TButton",
                                    command=lambda:_CANCEL.set(),state="disabled")
         self.cancel_btn.pack(side="left",padx=8)
         self.pv=ttk.Progressbar(act,mode="determinate",

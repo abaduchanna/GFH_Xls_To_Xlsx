@@ -15,6 +15,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[
+        ('runtime_guard.py', '.'),
         ('native_titlebar.py', '.'),
         ('assets', 'assets'),
         ('GFH_icon.ico', '.'),
@@ -34,6 +35,7 @@ a = Analysis(
         'theme_manager',
         'logo_handler',
         'header_manager',
+        'runtime_guard',
     ],
     hookspath=[],
     hooksconfig={},
@@ -113,6 +115,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    version='GFH_version.txt',
     icon='GFH_icon.ico',
 )
