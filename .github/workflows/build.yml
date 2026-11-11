@@ -17,6 +17,7 @@ jobs:
       matrix:
         app:
           - GFH_Xls_To_Xlsx
+          - GFH_Xls_To_Xlsx_Qt
 
     steps:
       - name: Checkout
