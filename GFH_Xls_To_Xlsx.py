@@ -157,6 +157,12 @@ WHITE = "#ffffff"
 LIGHT = "#f6f7fb"
 LOG_BG   = "#10182e"
 LOG_FG   = "#a8d8ff"
+# Log tag colors follow the theme: pastel on dark, darker shades on light
+# (fixed pastels washed out on the light theme's white log, ~1.6:1 contrast).
+LOG_TAG_COLORS = {"success": "#68D391", "error": "#FC8181",
+                  "info": "#90CDF4", "warning": "#F6E05E"}
+LOG_TAG_COLORS_LIGHT = {"success": "#2F855A", "error": "#C53030",
+                        "info": "#2B6CB0", "warning": "#B7791F"}
 
 ICON_ICO_NAME = "GFH_icon.ico"
 LOGO_PNG_NAME = "GFH_Telecom_Logo.png"
@@ -360,6 +366,22 @@ class App:
             pass
 
 
+    def _apply_log_tag_colors(self):
+        """Log tag colors follow the theme (pastel on dark, darker on light)
+        - fixed pastels washed out on the light theme's white log."""
+        log_widget = getattr(self, "output_log", None) or getattr(self, "log_w", None)
+        if log_widget is None:
+            return
+        palette = (LOG_TAG_COLORS_LIGHT
+                   if getattr(getattr(self, "theme_manager", None),
+                              "current_theme", "dark") == "light"
+                   else LOG_TAG_COLORS)
+        for tag, clr in palette.items():
+            try:
+                log_widget.tag_config(tag, foreground=clr)
+            except Exception:
+                pass
+
     def _apply_theme(self, colors=None):
         """Apply theme colors to all widgets EXCEPT header (header stays navy).
 
@@ -378,6 +400,7 @@ class App:
         #   - Labelframe (was previously missed → panels stayed white)
         #   - Checkbutton/Radiobutton selectcolor
         self.theme_manager.apply_theme_to_window(self.root)
+        self._apply_log_tag_colors()
         # Refresh header toggle button text in case theme changed
         if hasattr(self.header_mgr, 'update_button_text'):
             self.header_mgr.update_button_text()
@@ -430,9 +453,7 @@ class App:
         self.log_w=scrolledtext.ScrolledText(body,font=("Consolas",8),
                     bg=LOG_BG,fg=LOG_FG,relief="flat",wrap="word")
         self.log_w.pack(fill="both",expand=True)
-        for tag,clr in [("info","#90CDF4"),("success","#68D391"),
-                        ("error","#FC8181"),("warning","#F6E05E")]:
-            self.log_w.tag_config(tag,foreground=clr)
+        self._apply_log_tag_colors()
 
     def _browse(self):
         d=filedialog.askdirectory(title="Select folder with legacy Excel files")
